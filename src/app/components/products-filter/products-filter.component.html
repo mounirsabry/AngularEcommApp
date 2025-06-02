@@ -1,0 +1,58 @@
+<div class="products-filter">
+  <h2>Our Products</h2>
+
+  <div class="totalProducts">
+    Total Products: {{ totalNumberOfProducts }}
+  </div>
+
+  <div class="filter-area">
+    <h3>Filter Products</h3>
+    <div class="filters">
+
+      <div class="filter">
+        <label for="category">Category</label>
+        <select id="category" #category>
+          <option value="All">All</option>
+          <option value="{{ProductCategory.COFFEE}}">Coffee</option>
+          <option value="{{ProductCategory.TEA}}">Tea</option>
+          <option value="{{ProductCategory.NONE}}">Not Specified</option>
+        </select>
+      </div>
+
+      <div class="filter">
+        <label for="productTitle">Product Title</label>
+        <input type="text"
+               id="productTitle"
+               #productTitle
+               placeholder="Search by title ..." />
+      </div>
+
+      <div class="filter">
+        <label for="maxPrice">Max Price (EG)</label>
+        <input type="number"
+               min="0"
+               id="maxPrice"
+               #maxPrice
+               placeholder="Enter max price" />
+      </div>
+
+    </div>
+
+    <input type="button" value="Apply" (click)="applyFilters(category.value, productTitle.value, maxPrice.value)" />
+  </div>
+
+  <div class="filter-values">
+    <h3>Current Filter Values</h3>
+    <p>
+      <strong>Category:</strong> {{ currentCategory }}
+    </p>
+
+    <p>
+      <strong>Title Search:</strong> {{ currentSearchTitle }}
+    </p>
+
+    <p>
+      <strong>Max Price:</strong> {{ currentMaxPrice ? currentMaxPrice : "None" }}
+    </p>
+  </div>
+</div>
