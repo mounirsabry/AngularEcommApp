@@ -1,8 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {Product} from '../../models/Product';
 import {ProductService} from '../../services/ProductService';
-import {ImageDimensions} from '../../types/ImageDimensions';
 import {ProductWithDimensions} from '../../types/ProductWithDimensions';
+import {ImageUtils} from '../../utils/ImageUtils';
 
 @Component({
   selector: 'app-products',
@@ -11,51 +11,51 @@ import {ProductWithDimensions} from '../../types/ProductWithDimensions';
   styleUrl: './products.component.css'
 })
 export class ProductsComponent implements OnInit {
-  private readonly DEFAULT_WIDTH:400 = 400 as const;
-  private readonly DEFAULT_HEIGHT:300 = 300 as const;
+  private readonly DEFAULT_WIDTH: number = 400;
 
   protected displayedProducts: ProductWithDimensions[] = [];
   protected isLoading: boolean = true;
 
-  private ProductService: ProductService = new ProductService();
-  private readonly products: Product[];
+  private productService: ProductService = new ProductService();
+  private readonly allProducts: Product[];
 
   constructor() {
-     this.products = this.ProductService.getAllProducts();
-  }
-
-  imageDimensions: Map<string, ImageDimensions> = new Map();
-
-  calculateImageHeight(imagePath: string | null): Promise<number> {
-    if (imagePath == null) {
-      return new Promise((resolve) => resolve(this.DEFAULT_HEIGHT));
-    }
-
-    return new Promise((resolve) => {
-      const img = new Image();
-
-      img.onload = (): void => {
-        const aspectRatio: number = img.height / img.width;
-        const height: number = Math.round(this.DEFAULT_WIDTH * aspectRatio); // 400 is your desired width
-        this.imageDimensions.set(imagePath, { width: this.DEFAULT_WIDTH, height });
-        resolve(height);
-      };
-
-      img.onerror = (): void => resolve(this.DEFAULT_HEIGHT);
-      img.src = imagePath;
-    });
+    this.allProducts = this.productService.getAllProducts();
   }
 
   async ngOnInit(): Promise<void> {
-    // Calculate all dimensions first
-    this.displayedProducts = await Promise.all(
-      this.products.map(async (product) => ({
-        ...product,
-        calculatedHeight: await this.calculateImageHeight(product.imagePath)
-      }))
-    );
-
+    this.displayedProducts = await this.loadProductWithDimensions(this.allProducts);
     this.isLoading = false;
   }
 
+  private async loadProductWithDimensions(products: Product[]): Promise<ProductWithDimensions[]> {
+    return await Promise.all(
+      products.map(async (product: Product): Promise<ProductWithDimensions> => {
+        const imagePath: string | null = product.imagePath;
+
+        if (imagePath == null) {
+          return {
+            ...product,
+            calculatedHeight: 0
+          };
+        }
+
+        try {
+          const imageElement = await ImageUtils.getImage(imagePath);
+          const height: number = ImageUtils.calculateHeightPreservingAspectRatio(imageElement, this.DEFAULT_WIDTH);
+
+          return {
+            ...product,
+            calculatedHeight: height
+          };
+        } catch (error) {
+          console.error(`Failed to load image for product ${product.title}:`, error);
+          return {
+            ...product,
+            calculatedHeight: 0
+          };
+        }
+      })
+    );
+  }
 }
