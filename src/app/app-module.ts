@@ -8,7 +8,9 @@ import { MainComponent } from './components/main/main.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { ProductsFilterComponent } from './components/products-filter/products-filter.component';
 import { ProductsComponent } from './components/products/products.component';
-import {NgOptimizedImage} from '@angular/common';
+import { NgOptimizedImage } from '@angular/common';
+import { provideHttpClient } from '@angular/common/http';
+import { RatingPipe } from './pipes/rating-pipe';
 
 @NgModule({
   declarations: [
@@ -17,7 +19,8 @@ import {NgOptimizedImage} from '@angular/common';
     MainComponent,
     FooterComponent,
     ProductsFilterComponent,
-    ProductsComponent
+    ProductsComponent,
+    RatingPipe
   ],
   imports: [
     BrowserModule,
@@ -25,7 +28,8 @@ import {NgOptimizedImage} from '@angular/common';
     NgOptimizedImage
   ],
   providers: [
-    provideBrowserGlobalErrorListeners()
+    provideBrowserGlobalErrorListeners(),
+    provideHttpClient()
   ],
   bootstrap: [App]
 })

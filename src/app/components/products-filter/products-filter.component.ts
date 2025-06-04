@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { ProductCategory } from '../../models/ProductCategory';
+import { Component, OnInit } from '@angular/core';
+import { ProductService } from '../../services/ProductService';
 
 @Component({
   selector: 'app-products-filter',
@@ -7,14 +7,27 @@ import { ProductCategory } from '../../models/ProductCategory';
   templateUrl: './products-filter.component.html',
   styleUrl: './products-filter.component.css'
 })
-export class ProductsFilterComponent {
+export class ProductsFilterComponent implements OnInit {
 
-  protected totalNumberOfProducts: number = 0;
-  protected readonly ProductCategory:typeof ProductCategory = ProductCategory;
+  protected productCategories: string[] = [];
 
-  protected currentCategory: ProductCategory = ProductCategory.NONE;
-  protected currentSearchTitle: string = "None";
+  protected currentCategory: string = 'None'
+  protected currentSearchTitle: string = 'None';
   protected currentMaxPrice: number | null = null;
+
+  constructor(private _productService: ProductService) {}
+
+  ngOnInit(): void {
+    this._productService.getProductCategories()
+      .subscribe({
+        next: categories => {
+          this.productCategories = categories;
+        },
+        error: err => {
+          console.log(err);
+        }
+      })
+  }
 
   applyFilters(chosenCategory: string, searchTitle: string, maxPriceString: string): void {
     const maxPrice = maxPriceString ? parseInt(maxPriceString) : null;
@@ -22,7 +35,7 @@ export class ProductsFilterComponent {
       return;
     }
 
-    this.currentCategory = chosenCategory as ProductCategory;
+    this.currentCategory = chosenCategory;
     this.currentSearchTitle = searchTitle;
     this.currentMaxPrice = maxPrice;
     console.log(

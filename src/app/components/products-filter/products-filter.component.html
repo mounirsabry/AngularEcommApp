@@ -1,58 +1,76 @@
 <div class="products-filter">
-  <h2>Our Products</h2>
+  <h2 class="text-center">Our Products</h2>
 
-  <div class="totalProducts">
-    Total Products: {{ totalNumberOfProducts }}
-  </div>
-
+  <!-- Filter Area -->
   <div class="filter-area">
     <h3>Filter Products</h3>
     <div class="filters">
 
-      <div class="filter">
-        <label for="category">Category</label>
-        <select id="category" #category>
-          <option value="All">All</option>
-          <option value="{{ProductCategory.COFFEE}}">Coffee</option>
-          <option value="{{ProductCategory.TEA}}">Tea</option>
-          <option value="{{ProductCategory.NONE}}">Not Specified</option>
-        </select>
+      <!-- Form Layout -->
+      <div class="row g-3 align-items-center">
+
+        <!-- Category Filter -->
+        <div class="col-sm-4">
+          <label for="category" class="form-label">Category</label>
+          <select id="category" #category class="form-select">
+            <option value="All">All</option>
+            @for (category of productCategories; track $index) {
+              <option value="{{ category }}">{{ category }}</option>
+            }
+          </select>
+        </div>
+
+        <!-- Product Title Filter -->
+        <div class="col-sm-4">
+          <label for="productTitle" class="form-label">Product Title</label>
+          <input type="text"
+                 id="productTitle"
+                 #productTitle
+                 class="form-control"
+                 placeholder="Search by title ..." />
+        </div>
+
+        <!-- Max Price Filter -->
+        <div class="col-sm-4">
+          <label for="maxPrice" class="form-label">Max Price ($)</label>
+          <input type="number"
+                 min="0"
+                 id="maxPrice"
+                 #maxPrice
+                 class="form-control"
+                 placeholder="Enter max price" />
+        </div>
+
       </div>
 
-      <div class="filter">
-        <label for="productTitle">Product Title</label>
-        <input type="text"
-               id="productTitle"
-               #productTitle
-               placeholder="Search by title ..." />
-      </div>
-
-      <div class="filter">
-        <label for="maxPrice">Max Price (EG)</label>
-        <input type="number"
-               min="0"
-               id="maxPrice"
-               #maxPrice
-               placeholder="Enter max price" />
-      </div>
+      <!-- Apply Button -->
+      <button type="button" class="w-100 btn btn-primary mt-3" (click)="applyFilters(category.value, productTitle.value, maxPrice.value)">
+        Apply
+      </button>
 
     </div>
 
-    <input type="button" value="Apply" (click)="applyFilters(category.value, productTitle.value, maxPrice.value)" />
-  </div>
-
-  <div class="filter-values">
-    <h3>Current Filter Values</h3>
-    <p>
-      <strong>Category:</strong> {{ currentCategory }}
-    </p>
-
-    <p>
-      <strong>Title Search:</strong> {{ currentSearchTitle }}
-    </p>
-
-    <p>
-      <strong>Max Price:</strong> {{ currentMaxPrice ? currentMaxPrice : "None" }}
-    </p>
+    <!-- Current Filter Values -->
+    <div class="filter-values mt-4">
+      <h3>Current Filter Values</h3>
+      <div class="table-responsive">
+        <table class="table table-striped">
+          <tbody>
+          <tr>
+            <th scope="row">Category:</th>
+            <td>{{ currentCategory }}</td>
+          </tr>
+          <tr>
+            <th scope="row">Title Search:</th>
+            <td>{{ currentSearchTitle || 'None' }}</td>
+          </tr>
+          <tr>
+            <th scope="row">Max Price:</th>
+            <td>{{ currentMaxPrice ? currentMaxPrice : 'None' }}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
   </div>
 </div>

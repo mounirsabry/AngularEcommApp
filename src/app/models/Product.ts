@@ -1,24 +1,35 @@
-import {ProductCategory} from './ProductCategory';
+import { ProductReviewResponse } from '../dtos/ProductReviewResponse';
 
-export class Product {
+export interface Product {
   id: number;
   title: string;
-  stock: number;
-  category: ProductCategory;
+  description: string;
+  category: string;
   price: number;
-  imagePath: string | null = null;
-
-  constructor(id: number,
-              title: string,
-              stock: number,
-              category: ProductCategory,
-              price: number,
-              imagePath: string | null = null) {
-    this.id = id;
-    this.title = title;
-    this.stock = stock;
-    this.category = category;
-    this.price = price;
-    this.imagePath = imagePath;
-  }
+  discountPercentage: number;
+  rating: number;
+  stock: number;
+  tags: string[];
+  brand: string;
+  sku: string;
+  weight: number;
+  dimensions: {
+    width: number;
+    height: number;
+    depth: number;
+  };
+  warrantyInformation: string;
+  shippingInformation: string;
+  availabilityStatus: string;
+  reviews: ProductReviewResponse[];
+  returnPolicy: string;
+  minimumOrderQuantity: number;
+  meta: {
+    createdAt: string; // ISO date string
+    updatedAt: string; // ISO date string
+    barcode: string;
+    qrCode: string;
+  };
+  thumbnail: string; // URL to thumbnail image
+  images: string[];   // Array of image URLs
 }

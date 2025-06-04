@@ -16,12 +16,12 @@ export class ImageUtils {
   }
 
   static calculateHeightPreservingAspectRatio(img: HTMLImageElement, desiredWidth: number): number {
-    const aspectRatio = img.height / img.width;
+    const aspectRatio: number = img.height / img.width;
     return Math.round(desiredWidth * aspectRatio);
   }
 
   static calculateWidthPreservingAspectRatio(img: HTMLImageElement, desiredHeight: number): number {
-    const aspectRatio = img.width / img.height;
+    const aspectRatio: number = img.width / img.height;
     return Math.round(desiredHeight * aspectRatio);
   }
 }

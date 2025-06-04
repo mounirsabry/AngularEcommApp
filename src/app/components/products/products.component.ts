@@ -1,8 +1,11 @@
-import {Component, OnInit} from '@angular/core';
-import {Product} from '../../models/Product';
-import {ProductService} from '../../services/ProductService';
-import {ProductWithDimensions} from '../../types/ProductWithDimensions';
-import {ImageUtils} from '../../utils/ImageUtils';
+import { Component, OnInit } from '@angular/core';
+import { ProductService } from '../../services/ProductService';
+import { ImageUtils } from '../../utils/ImageUtils';
+import { Product } from '../../models/Product';
+
+interface ProductWithDimensions extends Product {
+  calculatedHeight: number;
+}
 
 @Component({
   selector: 'app-products',
@@ -11,27 +14,34 @@ import {ImageUtils} from '../../utils/ImageUtils';
   styleUrl: './products.component.css'
 })
 export class ProductsComponent implements OnInit {
-  private readonly DEFAULT_WIDTH: number = 400;
+  protected readonly DEFAULT_WIDTH: number = 400;
+
+  private allProducts: Product[] = [];
 
   protected displayedProducts: ProductWithDimensions[] = [];
   protected isLoading: boolean = true;
 
-  private productService: ProductService = new ProductService();
-  private readonly allProducts: Product[];
-
-  constructor() {
-    this.allProducts = this.productService.getAllProducts();
+  constructor(private _productService: ProductService) {
   }
 
   async ngOnInit(): Promise<void> {
-    this.displayedProducts = await this.loadProductWithDimensions(this.allProducts);
-    this.isLoading = false;
+    this._productService.getAllProducts()
+      .subscribe({
+        next: async (response) => {
+          this.allProducts = response.products;
+
+          this.displayedProducts = await this.loadProductWithDimensions(this.allProducts);
+          this.isLoading = false;
+        }, error: error => {
+          console.log(error);
+        }
+      });
   }
 
   private async loadProductWithDimensions(products: Product[]): Promise<ProductWithDimensions[]> {
     return await Promise.all(
       products.map(async (product: Product): Promise<ProductWithDimensions> => {
-        const imagePath: string | null = product.imagePath;
+        const imagePath: string | null = product.images[0]!;
 
         if (imagePath == null) {
           return {
@@ -57,5 +67,9 @@ export class ProductsComponent implements OnInit {
         }
       })
     );
+  }
+
+  getAvailableProductsCount() {
+    return this.displayedProducts.length;
   }
 }
