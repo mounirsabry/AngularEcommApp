@@ -11,6 +11,7 @@ import { ProductsComponent } from './components/products/products.component';
 import { NgOptimizedImage } from '@angular/common';
 import { provideHttpClient } from '@angular/common/http';
 import { RatingPipe } from './pipes/rating-pipe';
+import { FilterProductsPipe } from './pipes/filter-products-pipe';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { RatingPipe } from './pipes/rating-pipe';
     FooterComponent,
     ProductsFilterComponent,
     ProductsComponent,
-    RatingPipe
+    RatingPipe,
+    FilterProductsPipe
   ],
   imports: [
     BrowserModule,

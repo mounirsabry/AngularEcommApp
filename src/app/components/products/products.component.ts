@@ -1,11 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { ProductService } from '../../services/ProductService';
 import { ImageUtils } from '../../utils/ImageUtils';
 import { Product } from '../../models/Product';
-
-interface ProductWithDimensions extends Product {
-  calculatedHeight: number;
-}
+import { ProductService } from '../../services/product.service';
+import { ProductWithDimensions } from '../../types/ProductWithDimensions';
 
 @Component({
   selector: 'app-products',
@@ -18,7 +15,7 @@ export class ProductsComponent implements OnInit {
 
   private allProducts: Product[] = [];
 
-  protected displayedProducts: ProductWithDimensions[] = [];
+  protected displayableProducts: ProductWithDimensions[] = [];
   protected isLoading: boolean = true;
 
   constructor(private _productService: ProductService) {
@@ -30,7 +27,7 @@ export class ProductsComponent implements OnInit {
         next: async (response) => {
           this.allProducts = response.products;
 
-          this.displayedProducts = await this.loadProductWithDimensions(this.allProducts);
+          this.displayableProducts = await this.loadProductWithDimensions(this.allProducts);
           this.isLoading = false;
         }, error: error => {
           console.log(error);
@@ -70,6 +67,6 @@ export class ProductsComponent implements OnInit {
   }
 
   getAvailableProductsCount() {
-    return this.displayedProducts.length;
+    return this.displayableProducts.length;
   }
 }

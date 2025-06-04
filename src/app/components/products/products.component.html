@@ -4,7 +4,7 @@
   <div class="products-list">
 
     <div class="totalProducts">
-      Total Products: {{ getAvailableProductsCount() }}
+      Number of Products in the System: {{ getAvailableProductsCount() }}
     </div>
 
     @if (isLoading) {
@@ -17,7 +17,7 @@
         </div>
       } @else {
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
-          @for (product of displayedProducts; track product.id) {
+          @for (product of displayableProducts | filterProducts; track product.id) {
             <div class="col">
               <div class="card h-100 shadow-sm">
                 <img ngSrc="{{ product.images[0]! }}"

@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { ProductService } from '../../services/ProductService';
+import { ProductService } from '../../services/product.service';
+import { ProductFilterService } from '../../services/product-filter.service';
+import { FiltersClass } from '../../types/FiltersClass';
 
 @Component({
   selector: 'app-products-filter',
@@ -11,11 +13,14 @@ export class ProductsFilterComponent implements OnInit {
 
   protected productCategories: string[] = [];
 
-  protected currentCategory: string = 'None'
-  protected currentSearchTitle: string = 'None';
+  protected currentCategory: string | null = null;
+  protected currentSearchTitle: string | null = null;
   protected currentMaxPrice: number | null = null;
 
-  constructor(private _productService: ProductService) {}
+  constructor(
+    private _productService: ProductService,
+    private _productFilterService: ProductFilterService
+  ) {}
 
   ngOnInit(): void {
     this._productService.getProductCategories()
@@ -35,12 +40,35 @@ export class ProductsFilterComponent implements OnInit {
       return;
     }
 
-    this.currentCategory = chosenCategory;
-    this.currentSearchTitle = searchTitle;
-    this.currentMaxPrice = maxPrice;
-    console.log(
-      `Category: ${this.currentCategory}, SearchTitle: ${this.currentSearchTitle}, MaxPrice: ${this.currentMaxPrice}`
-    )
+    // Normalize the values all and empty strings to null for cleaner filtering.
+    const normalizedCategory = (chosenCategory === 'All') ? null : chosenCategory;
 
+    const normalizedTitle = searchTitle.trim();
+
+    console.log(
+      `Category: ${normalizedCategory}, SearchTitle: ${normalizedTitle}, MaxPrice: ${maxPrice}`
+    );
+
+    // Create a new FiltersClass instance to ensure change detection
+    const filtersClass: FiltersClass = new FiltersClass();
+    filtersClass.categoryFilter = normalizedCategory;
+    filtersClass.titleFilter = normalizedTitle;
+    filtersClass.maxPriceFilter = maxPrice;
+
+    this._productFilterService.setFilters(filtersClass);
+
+    this.currentCategory = normalizedCategory;
+    this.currentSearchTitle = normalizedTitle;
+    this.currentMaxPrice = maxPrice;
+  }
+
+  clearFilters(): void {
+    // Reset filters to null values
+    const filtersClass: FiltersClass = new FiltersClass();
+    this._productFilterService.setFilters(filtersClass);
+
+    this.currentCategory = null;
+    this.currentSearchTitle = null;
+    this.currentMaxPrice = null;
   }
 }

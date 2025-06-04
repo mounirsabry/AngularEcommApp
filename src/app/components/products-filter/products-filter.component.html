@@ -43,9 +43,13 @@
 
       </div>
 
-      <!-- Apply Button -->
       <button type="button" class="w-100 btn btn-primary mt-3" (click)="applyFilters(category.value, productTitle.value, maxPrice.value)">
         Apply
+      </button>
+
+      <button type="button" class="w-100 btn btn-secondary mt-3"
+              (click)="clearFilters(); category.value = 'All'; productTitle.value = ''; maxPrice.value = '';">
+        Clear All Filters
       </button>
 
     </div>
@@ -58,15 +62,15 @@
           <tbody>
           <tr>
             <th scope="row">Category:</th>
-            <td>{{ currentCategory }}</td>
+            <td>{{ currentCategory || "All" }}</td>
           </tr>
           <tr>
             <th scope="row">Title Search:</th>
-            <td>{{ currentSearchTitle || 'None' }}</td>
+            <td>{{ currentSearchTitle || "None" }}</td>
           </tr>
           <tr>
             <th scope="row">Max Price:</th>
-            <td>{{ currentMaxPrice ? currentMaxPrice : 'None' }}</td>
+            <td>{{ currentMaxPrice ? currentMaxPrice : "None" }}</td>
           </tr>
           </tbody>
         </table>
