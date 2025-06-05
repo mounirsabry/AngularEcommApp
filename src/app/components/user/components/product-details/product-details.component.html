@@ -1,0 +1,38 @@
+@if (product != null) {
+  <div class="col">
+    <div class="card h-100 shadow-sm">
+      <img ngSrc="{{ product.images[0]! }}"
+           [width]="1000"
+           [height]="1000"
+           priority="priority"
+           alt="An image for the product {{ product.title }}"
+           class="card-img-top">
+
+      <div class="card-body">
+        <h5 class="card-title">{{ product.title }}</h5>
+
+        <p class="card-text">
+          {{ product.description }}
+        </p>
+
+        <span class="badge bg-secondary text-white">{{ product.category }}</span>
+
+        <p class="card-text">
+          <strong>Price:</strong> ${{ product.price }}
+        </p>
+
+        <p class="card-text">
+          <strong>Stock:</strong> {{ product.stock }} units
+        </p>
+
+        <p class="card-text">
+          <strong>Rating:</strong> {{ product.rating | rating }} ({{ product.rating }})
+        </p>
+
+        <button type="button" (click)="addToCart(product!)"
+                class="w-100 btn btn-primary">Add to CartItem
+        </button>
+      </div>
+    </div>
+  </div>
+}

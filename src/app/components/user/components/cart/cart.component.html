@@ -1,0 +1,39 @@
+@if (cart != null && cart.length > 0) {
+  <div class="row row-cols-1 row-cols-md-3 g-4">
+    @for (cartItem of cart; track cartItem.productId) {
+      <div class="col">
+        <div class="card h-100 shadow-sm">
+          <div class="card-body d-flex flex-column justify-content-between">
+            <h5 class="card-title text-primary">Product ID: {{ cartItem.productId }}</h5>
+
+            <div class="d-flex align-items-center justify-content-between mb-3">
+              <label class="form-label fw-bold mb-0">Quantity:</label>
+              <div class="input-group input-group-sm w-auto">
+                <button class="btn btn-outline-secondary" (click)="decreaseQuantity(cartItem)">
+                  -
+                </button>
+                <input type="text" class="form-control text-center" value="{{ cartItem.quantity }}" readonly
+                       #cartItemQuantity
+                       style="max-width: 50px;">
+                <button class="btn btn-outline-secondary" (click)="increaseQuantity(cartItem)">
+                  +
+                </button>
+              </div>
+            </div>
+
+            <div class="mt-2 d-flex justify-content-end">
+              <button class="btn btn-outline-danger btn-sm me-2" (click)="removeItem(cartItem.productId)">
+                Remove
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+} @else {
+  <div class="alert alert-info text-center py-5">
+    <h4>🛒 Cart is Empty</h4>
+    <p class="mb-0">Add more products to the cart to see them here.</p>
+  </div>
+}

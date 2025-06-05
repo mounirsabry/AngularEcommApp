@@ -1,0 +1,17 @@
+@if (isTopImageLoaded) {
+  <div style="display: flex; justify-content: center; margin-bottom: 20px">
+    <img ngSrc="{{ topImagePath }}"
+         [width]="imageWidth"
+         [height]="imageHeight"
+         priority="priority"
+         style="object-fit: cover"
+
+         alt="An image that should be displayed on the top of the page"/>
+  </div>
+}
+
+<div style="display: flex; justify-content: center">
+  <button type="button" class="btn btn-primary "
+          (click)="redirectToProducts()">View Our Products List
+  </button>
+</div>
