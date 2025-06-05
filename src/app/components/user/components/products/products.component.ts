@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { ImageUtils } from '../../utils/ImageUtils';
 import { Product } from '../../models/Product';
 import { ProductService } from '../../services/product.service';
 import { ProductWithDimensions } from '../../types/ProductWithDimensions';
+import { ProductUtils } from '../../utils/ProductUtils';
+import { Router } from '@angular/router';
+import { CartService } from '../../services/cart-service';
 
 @Component({
-  selector: 'app-products',
+  selector: 'user-products',
   standalone: false,
   templateUrl: './products.component.html',
   styleUrl: './products.component.css'
@@ -18,7 +20,9 @@ export class ProductsComponent implements OnInit {
   protected displayableProducts: ProductWithDimensions[] = [];
   protected isLoading: boolean = true;
 
-  constructor(private _productService: ProductService) {
+  constructor(private _productService: ProductService,
+              private _cartService: CartService,
+              private _router: Router) {
   }
 
   async ngOnInit(): Promise<void> {
@@ -37,36 +41,21 @@ export class ProductsComponent implements OnInit {
 
   private async loadProductWithDimensions(products: Product[]): Promise<ProductWithDimensions[]> {
     return await Promise.all(
-      products.map(async (product: Product): Promise<ProductWithDimensions> => {
-        const imagePath: string | null = product.images[0]!;
-
-        if (imagePath == null) {
-          return {
-            ...product,
-            calculatedHeight: 0
-          };
-        }
-
-        try {
-          const imageElement = await ImageUtils.getImage(imagePath);
-          const height: number = ImageUtils.calculateHeightPreservingAspectRatio(imageElement, this.DEFAULT_WIDTH);
-
-          return {
-            ...product,
-            calculatedHeight: height
-          };
-        } catch (error) {
-          console.error(`Failed to load image for product ${product.title}:`, error);
-          return {
-            ...product,
-            calculatedHeight: 0
-          };
-        }
-      })
+      products.map(async (product: Product): Promise<ProductWithDimensions> =>
+        ProductUtils.getProductWithDimensions(product, this.DEFAULT_WIDTH))
     );
   }
 
   getAvailableProductsCount() {
     return this.displayableProducts.length;
+  }
+
+  navigateToProduct(id: number) {
+    this._router.navigate([`/user/product/${id}`]).then(_ => {});
+  }
+
+  addToCart(product: ProductWithDimensions) {
+    this._cartService.addItemToCart(product.id);
+    alert(`Quantity 1 of the product with title ${product.title} has been added to the cart`);
   }
 }

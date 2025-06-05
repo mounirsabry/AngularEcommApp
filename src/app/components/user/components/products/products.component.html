@@ -1,3 +1,5 @@
+<user-products-filter></user-products-filter>
+
 <link rel="preconnect" href="https://cdn.dummyjson.com">
 <div class="products">
   <h2>Products List</h2>
@@ -25,7 +27,8 @@
                      [height]="product.calculatedHeight"
                      priority="priority"
                      alt="An image for the product {{ product.title }}"
-                     class="card-img-top">
+                     class="card-img-top"
+                     (click)="navigateToProduct(product.id)">
 
                 <div class="card-body">
                   <h5 class="card-title">{{ product.title }}</h5>
@@ -48,7 +51,9 @@
                     <strong>Rating:</strong> {{ product.rating | rating }} ({{ product.rating }})
                   </p>
 
-                  <button type="button" class="w-100 btn btn-primary">Add to Cart</button>
+                  <button type="button" (click)="addToCart(product)"
+                          class="w-100 btn btn-primary">Add to CartItem
+                  </button>
                 </div>
               </div>
             </div>

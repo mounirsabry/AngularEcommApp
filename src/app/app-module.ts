@@ -1,37 +1,21 @@
-import { NgModule, provideBrowserGlobalErrorListeners } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
-import { AppRoutingModule } from './app-routing-module';
-import { App } from './app';
-import { NavbarComponent } from './components/navbar/navbar.component';
-import { MainComponent } from './components/main/main.component';
-import { FooterComponent } from './components/footer/footer.component';
-import { ProductsFilterComponent } from './components/products-filter/products-filter.component';
-import { ProductsComponent } from './components/products/products.component';
-import { NgOptimizedImage } from '@angular/common';
 import { provideHttpClient } from '@angular/common/http';
-import { RatingPipe } from './pipes/rating-pipe';
-import { FilterProductsPipe } from './pipes/filter-products-pipe';
+import { App } from './app';
+import { SharedModule } from './components/shared/shared-module';
+import { AppRoutingModule } from './app-routing-module';
 
 @NgModule({
   declarations: [
-    App,
-    NavbarComponent,
-    MainComponent,
-    FooterComponent,
-    ProductsFilterComponent,
-    ProductsComponent,
-    RatingPipe,
-    FilterProductsPipe
+    App
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule,
-    NgOptimizedImage
+    SharedModule,
+    AppRoutingModule
   ],
   providers: [
-    provideBrowserGlobalErrorListeners(),
-    provideHttpClient()
+    provideHttpClient()  // Now HttpClient is available globally.
   ],
   bootstrap: [App]
 })

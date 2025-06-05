@@ -4,7 +4,7 @@ import { ProductFilterService } from '../../services/product-filter.service';
 import { FiltersClass } from '../../types/FiltersClass';
 
 @Component({
-  selector: 'app-products-filter',
+  selector: 'user-products-filter',
   standalone: false,
   templateUrl: './products-filter.component.html',
   styleUrl: './products-filter.component.css'
